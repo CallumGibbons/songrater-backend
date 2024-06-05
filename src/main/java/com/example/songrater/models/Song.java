@@ -2,6 +2,7 @@ package com.example.songrater.models;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "song_ratings")
@@ -30,7 +31,7 @@ public class Song {
     private int numberOfListens;
 
     @Column(name = "last_listened")
-    private LocalDate lastListened;
+    private LocalDateTime lastListened;
 
     @Column(name = "album_art")
     private String albumArt;
@@ -91,11 +92,11 @@ public class Song {
         this.numberOfListens = numberOfListens;
     }
 
-    public LocalDate getLastListened() {
+    public LocalDateTime getLastListened() {
         return lastListened;
     }
 
-    public void setLastListened(LocalDate lastListened) {
+    public void setLastListened(LocalDateTime lastListened) {
         this.lastListened = lastListened;
     }
 
