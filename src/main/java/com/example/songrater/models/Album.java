@@ -1,7 +1,6 @@
 package com.example.songrater.models;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -12,10 +11,10 @@ public class Album {
     @Column(name = "PK_album_id")
     private Long id;
 
-    @Column(name = "FK_listening_album")
+    @Column(name = "listening_album")
     private String listeningAlbum;
 
-    @Column(name = "FK_listening_artist")
+    @Column(name = "listening_artist")
     private String listeningArtist;
 
     @Column(name = "album_rating")
@@ -69,8 +68,8 @@ public class Album {
         return isFavorite;
     }
 
-    public void setFavorite(boolean isFavorite) {
-        this.isFavorite = isFavorite;
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 
     public int getNumberOfListens() {
