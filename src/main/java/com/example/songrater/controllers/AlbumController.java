@@ -7,14 +7,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/albums")
 public class AlbumController {
 
+    private final AlbumService albumService;
+
     @Autowired
-    private AlbumService albumService;
+    public AlbumController(AlbumService albumService) {
+        this.albumService = albumService;
+    }
 
     @GetMapping
     public List<Album> getAllAlbums() {
@@ -23,7 +28,14 @@ public class AlbumController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Album> getAlbumById(@PathVariable Long id) {
-        return albumService.getAlbumById(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        Optional<Album> album = albumService.getAlbumById(id);
+        return album.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/listening/{listeningAlbum}")
+    public ResponseEntity<Album> getAlbumByListeningAlbum(@PathVariable String listeningAlbum) {
+        Optional<Album> album = albumService.getAlbumByListeningAlbum(listeningAlbum);
+        return album.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -32,12 +44,13 @@ public class AlbumController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Album> updateAlbum(@PathVariable Long id, @RequestBody Album albumDetails) {
-        return albumService.updateAlbum(id, albumDetails).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Album> updateAlbum(@PathVariable Long id, @RequestBody Album album) {
+        return ResponseEntity.ok(albumService.updateAlbum(id, album));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAlbum(@PathVariable Long id) {
-        return albumService.deleteAlbum(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+        albumService.deleteAlbum(id);
+        return ResponseEntity.noContent().build();
     }
 }

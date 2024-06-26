@@ -7,14 +7,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/songs")
 public class SongController {
 
+    private final SongService songService;
+
     @Autowired
-    private SongService songService;
+    public SongController(SongService songService) {
+        this.songService = songService;
+    }
 
     @GetMapping
     public List<Song> getAllSongs() {
@@ -23,7 +28,14 @@ public class SongController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Song> getSongById(@PathVariable Long id) {
-        return songService.getSongById(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        Optional<Song> song = songService.getSongById(id);
+        return song.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/listening/{listeningSong}")
+    public ResponseEntity<Song> getSongByListeningSong(@PathVariable String listeningSong) {
+        Optional<Song> song = songService.getSongByListeningSong(listeningSong);
+        return song.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -32,12 +44,13 @@ public class SongController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Song> updateSong(@PathVariable Long id, @RequestBody Song songDetails) {
-        return songService.updateSong(id, songDetails).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Song> updateSong(@PathVariable Long id, @RequestBody Song song) {
+        return ResponseEntity.ok(songService.updateSong(id, song));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSong(@PathVariable Long id) {
-        return songService.deleteSong(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+        songService.deleteSong(id);
+        return ResponseEntity.noContent().build();
     }
 }

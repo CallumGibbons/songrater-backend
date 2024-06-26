@@ -7,14 +7,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/artists")
 public class ArtistController {
 
+    private final ArtistService artistService;
+
     @Autowired
-    private ArtistService artistService;
+    public ArtistController(ArtistService artistService) {
+        this.artistService = artistService;
+    }
 
     @GetMapping
     public List<Artist> getAllArtists() {
@@ -23,7 +28,14 @@ public class ArtistController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Artist> getArtistById(@PathVariable Long id) {
-        return artistService.getArtistById(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        Optional<Artist> artist = artistService.getArtistById(id);
+        return artist.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/listening/{listeningArtist}")
+    public ResponseEntity<Artist> getArtistByListeningArtist(@PathVariable String listeningArtist) {
+        Optional<Artist> artist = artistService.getArtistByListeningArtist(listeningArtist);
+        return artist.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -32,12 +44,13 @@ public class ArtistController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Artist> updateArtist(@PathVariable Long id, @RequestBody Artist artistDetails) {
-        return artistService.updateArtist(id, artistDetails).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Artist> updateArtist(@PathVariable Long id, @RequestBody Artist artist) {
+        return ResponseEntity.ok(artistService.updateArtist(id, artist));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteArtist(@PathVariable Long id) {
-        return artistService.deleteArtist(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+        artistService.deleteArtist(id);
+        return ResponseEntity.noContent().build();
     }
 }

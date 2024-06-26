@@ -11,8 +11,12 @@ import java.util.Optional;
 @Service
 public class ArtistService {
 
+    private final ArtistRepository artistRepository;
+
     @Autowired
-    private ArtistRepository artistRepository;
+    public ArtistService(ArtistRepository artistRepository) {
+        this.artistRepository = artistRepository;
+    }
 
     public List<Artist> getAllArtists() {
         return artistRepository.findAll();
@@ -22,25 +26,20 @@ public class ArtistService {
         return artistRepository.findById(id);
     }
 
+    public Optional<Artist> getArtistByListeningArtist(String listeningArtist) {
+        return artistRepository.findByListeningArtist(listeningArtist);
+    }
+
     public Artist createArtist(Artist artist) {
         return artistRepository.save(artist);
     }
 
-    public Optional<Artist> updateArtist(Long id, Artist artistDetails) {
-        return artistRepository.findById(id).map(artist -> {
-            artist.setListeningArtist(artistDetails.getListeningArtist());
-            artist.setRating(artistDetails.getRating());
-            artist.setFavorite(artistDetails.isFavorite());
-            artist.setNumberOfListens(artistDetails.getNumberOfListens());
-            artist.setLastListened(artistDetails.getLastListened());
-            return artistRepository.save(artist);
-        });
+    public Artist updateArtist(Long id, Artist artist) {
+        artist.setId(id);
+        return artistRepository.save(artist);
     }
 
-    public boolean deleteArtist(Long id) {
-        return artistRepository.findById(id).map(artist -> {
-            artistRepository.delete(artist);
-            return true;
-        }).orElse(false);
+    public void deleteArtist(Long id) {
+        artistRepository.deleteById(id);
     }
 }

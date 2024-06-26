@@ -11,8 +11,12 @@ import java.util.Optional;
 @Service
 public class SongService {
 
+    private final SongRepository songRepository;
+
     @Autowired
-    private SongRepository songRepository;
+    public SongService(SongRepository songRepository) {
+        this.songRepository = songRepository;
+    }
 
     public List<Song> getAllSongs() {
         return songRepository.findAll();
@@ -22,28 +26,20 @@ public class SongService {
         return songRepository.findById(id);
     }
 
+    public Optional<Song> getSongByListeningSong(String listeningSong) {
+        return songRepository.findByListeningSong(listeningSong);
+    }
+
     public Song createSong(Song song) {
         return songRepository.save(song);
     }
 
-    public Optional<Song> updateSong(Long id, Song songDetails) {
-        return songRepository.findById(id).map(song -> {
-            song.setListeningSong(songDetails.getListeningSong());
-            song.setListeningAlbum(songDetails.getListeningAlbum());
-            song.setListeningArtist(songDetails.getListeningArtist());
-            song.setRating(songDetails.getRating());
-            song.setFavorite(songDetails.isFavorite());
-            song.setNumberOfListens(songDetails.getNumberOfListens());
-            song.setLastListened(songDetails.getLastListened());
-            song.setAlbumArt(songDetails.getAlbumArt());
-            return songRepository.save(song);
-        });
+    public Song updateSong(Long id, Song song) {
+        song.setId(id);
+        return songRepository.save(song);
     }
 
-    public boolean deleteSong(Long id) {
-        return songRepository.findById(id).map(song -> {
-            songRepository.delete(song);
-            return true;
-        }).orElse(false);
+    public void deleteSong(Long id) {
+        songRepository.deleteById(id);
     }
 }

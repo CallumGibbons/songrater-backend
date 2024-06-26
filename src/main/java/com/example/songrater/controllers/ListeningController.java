@@ -7,37 +7,50 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/listens")
 public class ListeningController {
 
+    private final ListeningService listeningService;
+
     @Autowired
-    private ListeningService listenService;
+    public ListeningController(ListeningService listeningService) {
+        this.listeningService = listeningService;
+    }
 
     @GetMapping
     public List<Listen> getAllListens() {
-        return listenService.getAllListens();
+        return listeningService.getAllListens();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Listen> getListenById(@PathVariable Long id) {
-        return listenService.getListenById(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        Optional<Listen> listen = listeningService.getListenById(id);
+        return listen.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/artist/{artistName}")
+    public ResponseEntity<Listen> getListenByArtistName(@PathVariable String artistName) {
+        Optional<Listen> listen = listeningService.getListenByArtistName(artistName);
+        return listen.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
     public Listen createListen(@RequestBody Listen listen) {
-        return listenService.createListen(listen);
+        return listeningService.createListen(listen);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Listen> updateListen(@PathVariable Long id, @RequestBody Listen listenDetails) {
-        return listenService.updateListen(id, listenDetails).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Listen> updateListen(@PathVariable Long id, @RequestBody Listen listen) {
+        return ResponseEntity.ok(listeningService.updateListen(id, listen));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteListen(@PathVariable Long id) {
-        return listenService.deleteListen(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+        listeningService.deleteListen(id);
+        return ResponseEntity.noContent().build();
     }
 }

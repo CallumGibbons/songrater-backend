@@ -11,8 +11,12 @@ import java.util.Optional;
 @Service
 public class ListeningService {
 
+    private final ListeningRepository listeningRepository;
+
     @Autowired
-    private ListeningRepository listeningRepository;
+    public ListeningService(ListeningRepository listeningRepository) {
+        this.listeningRepository = listeningRepository;
+    }
 
     public List<Listen> getAllListens() {
         return listeningRepository.findAll();
@@ -22,24 +26,20 @@ public class ListeningService {
         return listeningRepository.findById(id);
     }
 
+    public Optional<Listen> getListenByArtistName(String artistName) {
+        return listeningRepository.findByArtistName(artistName);
+    }
+
     public Listen createListen(Listen listen) {
         return listeningRepository.save(listen);
     }
 
-    public Optional<Listen> updateListen(Long id, Listen listenDetails) {
-        return listeningRepository.findById(id).map(listen -> {
-            listen.setListeningDate(listenDetails.getListeningDate());
-            listen.setArtistName(listenDetails.getArtistName());
-            listen.setAlbumName(listenDetails.getAlbumName());
-            listen.setSongName(listenDetails.getSongName());
-            return listeningRepository.save(listen);
-        });
+    public Listen updateListen(Long id, Listen listen) {
+        listen.setId(id);
+        return listeningRepository.save(listen);
     }
 
-    public boolean deleteListen(Long id) {
-        return listeningRepository.findById(id).map(listen -> {
-            listeningRepository.delete(listen);
-            return true;
-        }).orElse(false);
+    public void deleteListen(Long id) {
+        listeningRepository.deleteById(id);
     }
 }

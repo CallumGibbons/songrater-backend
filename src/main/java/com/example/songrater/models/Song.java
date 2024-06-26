@@ -9,22 +9,22 @@ import java.time.LocalDateTime;
 public class Song {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PK_song_id")
+    @Column(name = "pk_song_id")
     private Long id;
 
-    @Column(name = "FK_listening_song")
+    @Column(name = "fk_listening_song")
     private String listeningSong;
 
-    @Column(name = "FK_listening_album")
+    @Column(name = "fk_listening_album")
     private String listeningAlbum;
 
-    @Column(name = "FK_listening_artist")
+    @Column(name = "fk_listening_artist")
     private String listeningArtist;
 
     @Column(name = "song_rating")
     private int rating;
 
-    @Column(name = "is_favorite")
+    @Column(name = "is_favourite")
     private boolean isFavorite;
 
     @Column(name = "number_of_listens")

@@ -8,16 +8,16 @@ import java.time.LocalDateTime;
 public class Artist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PK_artist_id")
+    @Column(name = "pk_artist_id")
     private Long id;
 
-    @Column(name = "FK_listening_artist")
+    @Column(name = "fk_listening_artist")
     private String listeningArtist;
 
     @Column(name = "artist_rating")
     private int rating;
 
-    @Column(name = "is_favorite")
+    @Column(name = "is_favourite")
     private boolean isFavorite;
 
     @Column(name = "number_of_listens")

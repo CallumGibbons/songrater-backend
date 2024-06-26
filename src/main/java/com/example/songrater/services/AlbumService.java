@@ -11,8 +11,12 @@ import java.util.Optional;
 @Service
 public class AlbumService {
 
+    private final AlbumRepository albumRepository;
+
     @Autowired
-    private AlbumRepository albumRepository;
+    public AlbumService(AlbumRepository albumRepository) {
+        this.albumRepository = albumRepository;
+    }
 
     public List<Album> getAllAlbums() {
         return albumRepository.findAll();
@@ -22,27 +26,20 @@ public class AlbumService {
         return albumRepository.findById(id);
     }
 
+    public Optional<Album> getAlbumByListeningAlbum(String listeningAlbum) {
+        return albumRepository.findByListeningAlbum(listeningAlbum);
+    }
+
     public Album createAlbum(Album album) {
         return albumRepository.save(album);
     }
 
-    public Optional<Album> updateAlbum(Long id, Album albumDetails) {
-        return albumRepository.findById(id).map(album -> {
-            album.setListeningAlbum(albumDetails.getListeningAlbum());
-            album.setListeningArtist(albumDetails.getListeningArtist());
-            album.setRating(albumDetails.getRating());
-            album.setFavorite(albumDetails.isFavorite());
-            album.setNumberOfListens(albumDetails.getNumberOfListens());
-            album.setLastListened(albumDetails.getLastListened());
-            album.setAlbumArt(albumDetails.getAlbumArt());
-            return albumRepository.save(album);
-        });
+    public Album updateAlbum(Long id, Album album) {
+        album.setId(id);
+        return albumRepository.save(album);
     }
 
-    public boolean deleteAlbum(Long id) {
-        return albumRepository.findById(id).map(album -> {
-            albumRepository.delete(album);
-            return true;
-        }).orElse(false);
+    public void deleteAlbum(Long id) {
+        albumRepository.deleteById(id);
     }
 }

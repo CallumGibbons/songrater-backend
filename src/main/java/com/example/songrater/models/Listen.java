@@ -1,56 +1,30 @@
 package com.example.songrater.models;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "listening_history")
 public class Listen {
-    @Column(name = "Listening Time")
-    private LocalDateTime ListeningDate;
-    @Column(name = "Artist Name")
-    private String ArtistName;
-    @Column(name = "Album Name")
-    private String AlbumName;
-    @Column(name = "Song Name")
-    private String SongName;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PK_listen_id")
+    @Column(name = "pk_listen_id")
     private Long id;
 
-    public String getSongName() {
-        return SongName;
-    }
+    @Column(name = "Listening Time")
+    private LocalDateTime listeningDate;
 
-    public void setSongName(String songName) {
-        SongName = songName;
-    }
+    @Column(name = "Artist Name")
+    private String artistName;
 
-    public String getAlbumName() {
-        return AlbumName;
-    }
+    @Column(name = "Album Name")
+    private String albumName;
 
-    public void setAlbumName(String albumName) {
-        AlbumName = albumName;
-    }
+    @Column(name = "Song Name")
+    private String songName;
 
-    public String getArtistName() {
-        return ArtistName;
-    }
-
-    public void setArtistName(String artistName) {
-        ArtistName = artistName;
-    }
-
-    public LocalDateTime getListeningDate() {
-        return ListeningDate;
-    }
-
-    public void setListeningDate(LocalDateTime listeningDate) {
-        ListeningDate = listeningDate;
-    }
+    // Getters and setters
 
     public Long getId() {
         return id;
@@ -60,4 +34,35 @@ public class Listen {
         this.id = id;
     }
 
+    public LocalDateTime getListeningDate() {
+        return listeningDate;
+    }
+
+    public void setListeningDate(LocalDateTime listeningDate) {
+        this.listeningDate = listeningDate;
+    }
+
+    public String getArtistName() {
+        return artistName;
+    }
+
+    public void setArtistName(String artistName) {
+        this.artistName = artistName;
+    }
+
+    public String getAlbumName() {
+        return albumName;
+    }
+
+    public void setAlbumName(String albumName) {
+        this.albumName = albumName;
+    }
+
+    public String getSongName() {
+        return songName;
+    }
+
+    public void setSongName(String songName) {
+        this.songName = songName;
+    }
 }

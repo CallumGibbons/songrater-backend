@@ -8,19 +8,19 @@ import java.time.LocalDateTime;
 public class Album {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PK_album_id")
+    @Column(name = "pk_album_id")
     private Long id;
 
-    @Column(name = "listening_album")
+    @Column(name = "FK_listening_album")
     private String listeningAlbum;
 
-    @Column(name = "listening_artist")
+    @Column(name = "FK_listening_artist")
     private String listeningArtist;
 
     @Column(name = "album_rating")
     private int rating;
 
-    @Column(name = "is_favorite")
+    @Column(name = "is_favourite")
     private boolean isFavorite;
 
     @Column(name = "number_of_listens")
